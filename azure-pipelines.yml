@@ -5,7 +5,7 @@ resources:
 - repo: self
 
 variables:
-    imageRepository: 'becaDocker'
+    imageRepository: 'becadocker'
     containerRegistry: 'becacontainerregistry.azurecr.io'
     dockerfilePath: '$(Build.SourcesDirectory)/app/Dockerfile'
     tag: '$(Build.BuildId)'
