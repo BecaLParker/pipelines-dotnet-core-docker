@@ -5,8 +5,6 @@ resources:
 - repo: self
 
 variables:
-    # Container registry service connection established during pipeline creation
-    dockerRegistryServiceConnection: '{{ containerRegistryConnection.Id }}'
     imageRepository: 'becaDocker'
     containerRegistry: 'becacontainerregistry.azurecr.io'
     dockerfilePath: '$(Build.SourcesDirectory)/app/Dockerfile'
@@ -21,12 +19,11 @@ jobs:
   pool:
     vmImage: $(vmImageName)
   steps:
-  - task: Docker@2
+  - script: |
+      docker login $(containerRegistry) -u $(dockerId) -p $(dockerPassword)
+      docker build -t $(containerRegistry)/$(imageRepository):$(tag) -f $(dockerfilePath) .
+      docker push $(containerRegistry)/$(imageRepository):$(tag)
     displayName: Build and push an image to container registry
-    inputs:
-      command: buildAndPush
-      repository: $(imageRepository)
-      dockerfile: $(dockerfilePath)
-      containerRegistry: $(dockerRegistryServiceConnection)
-      tags: |
-        $(tag)
+    env:
+      dockerId: $(dockerId)
+      dockerPassword: $(dockerPassword)
