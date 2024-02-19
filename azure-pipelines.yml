@@ -5,6 +5,8 @@ resources:
 - repo: self
 
 variables:
+    azureSubscription: '7708fe25-6840-4024-9ca2-abaa70339018'
+    appName: 'beca-sample-docker-web-app'
     imageRepository: 'becadocker'
     containerRegistry: 'becacontainerregistry.azurecr.io'
     dockerfilePath: '$(Build.SourcesDirectory)/Dockerfile'
@@ -27,3 +29,10 @@ jobs:
     env:
       dockerId: $(dockerId)
       dockerPassword: $(dockerPassword)
+
+- task: AzureWebAppContainer@1
+    displayName: 'Azure Web App on Container Deploy'
+    inputs:
+        azureSubscription: $(azureSubscription)
+        appName: $(appName)
+        containers: $(containerRegistry)/$(imageRepository):$(tag)
